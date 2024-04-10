@@ -98,6 +98,18 @@ class UserService {
         return user;
     }
 
+    async isUsernameAvailable(username) {
+        const user = await this.userRepository.getOneByData(
+            { username },
+            "username -_id"
+        );
+        console.log(user);
+        if (!user) {
+            return true;
+        }
+        return false;
+    }
+
     createToken(data) {
         const token = jwt.sign({ data }, JWT_SECRET_KEY, {
             expiresIn: "7d"

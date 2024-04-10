@@ -6,6 +6,7 @@ import deleteProfile from "./deleteController.js";
 import getUserDetails from "./getUserDetailsController.js";
 import noRouteController from "./noRouteController.js";
 import getIdByUsername from "./getIdByUsername.js";
+import isUsernameAvailable from "./isUsernameAvailable.js";
 
 export {
     signup,
@@ -15,5 +16,6 @@ export {
     deleteProfile,
     getUserDetails,
     noRouteController,
-    getIdByUsername
+    getIdByUsername,
+    isUsernameAvailable
 };
