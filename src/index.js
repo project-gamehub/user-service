@@ -1,14 +1,13 @@
 import express from "express";
 import { PORT } from "../src/config/index.js";
 import { connectWithDB } from "./utils/index.js";
-import bodyParser from "body-parser";
 import router from "./routes/index.js";
 
 const app = express();
 
-app.use(bodyParser.json());
-// Add restriction in future
-app.use(bodyParser.urlencoded({ extended: false }));
+// TODO Add Limit on this
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use("/", router);
 
