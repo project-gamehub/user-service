@@ -8,7 +8,8 @@ import {
     getUserDetails,
     noRouteController,
     getIdByUsername,
-    isUsernameAvailable
+    isUsernameAvailable,
+    autocompleteUsername
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
@@ -27,7 +28,14 @@ router.delete("/delete", asyncErrorHandler(deleteProfile));
 router.get("/user-details", asyncErrorHandler(getUserDetails));
 router.get("/get-id-by-username/:username", asyncErrorHandler(getIdByUsername));
 // TODO Make this routes excluded from rate limitter as this will get polled very frequently
-router.get("/is-username-available/:username", asyncErrorHandler(isUsernameAvailable));
+router.get(
+    "/is-username-available/:username",
+    asyncErrorHandler(isUsernameAvailable)
+);
+router.get(
+    "/autocomplete-username/:username",
+    asyncErrorHandler(autocompleteUsername)
+);
 
 router.all("*", noRouteController);
 

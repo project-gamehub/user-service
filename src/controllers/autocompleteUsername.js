@@ -1,9 +1,9 @@
 import UserService from "../services/userService.js";
 
-const isUsernameAvailable = async (req, res) => {
+const autocompleteUsername = async (req, res) => {
     const username = req.params.username.toLowerCase();
     const userService = new UserService();
-    const isAvailable = await userService.isUsernameAvailable(username);
+    const isAvailable = await userService.autocompleteUsername(username);
 
     return res.status(200).json({
         message: isAvailable ? "Username available" : "Username unavailable",
@@ -12,4 +12,4 @@ const isUsernameAvailable = async (req, res) => {
     });
 };
 
-export default isUsernameAvailable;
+export default autocompleteUsername;

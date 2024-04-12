@@ -103,11 +103,19 @@ class UserService {
             { username },
             "username -_id"
         );
-        console.log(user);
         if (!user) {
             return true;
         }
         return false;
+    }
+
+    async autocompleteUsername(username) {
+        let users = await this.userRepository.getUsers(
+            username,
+            "username -_id"
+        );
+        users = users.map((user) => user.username);
+        return users;
     }
 
     createToken(data) {

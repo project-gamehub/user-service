@@ -22,6 +22,16 @@ class UserRepository {
         const user = await User.findOne(data, getFields);
         return user;
     }
+
+    async getUsers(inputUsername, getFields = "") {
+        const users = await User.find(
+            {
+                username: { $regex: `${inputUsername}.*` }
+            },
+            getFields
+        ).limit(5);
+        return users;
+    }
 }
 
 export default UserRepository;
