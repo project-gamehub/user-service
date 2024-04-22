@@ -76,11 +76,11 @@ class UserService {
         return response;
     }
 
-    async getUserDetails(data) {
-        const user = await this.userRepository.getOneByData(
-            data,
-            "name location _id username totalFriends isPublic"
-        );
+    async getUserDetails(
+        data,
+        fields = "name location _id username totalFriends isPublic"
+    ) {
+        const user = await this.userRepository.getOneByData(data, fields);
         if (!user) {
             throw new customError(400, "No user found");
         }

@@ -8,6 +8,7 @@ import noRouteController from "./noRouteController.js";
 import getIdByUsername from "./getIdByUsername.js";
 import isUsernameAvailable from "./isUsernameAvailable.js";
 import autocompleteUsername from "./autocompleteUsername.js";
+import getUsernameById from "./getUsernameById.js";
 
 export {
     signup,
@@ -19,5 +20,6 @@ export {
     noRouteController,
     getIdByUsername,
     isUsernameAvailable,
-    autocompleteUsername
+    autocompleteUsername,
+    getUsernameById
 };

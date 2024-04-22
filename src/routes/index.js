@@ -9,7 +9,8 @@ import {
     noRouteController,
     getIdByUsername,
     isUsernameAvailable,
-    autocompleteUsername
+    autocompleteUsername,
+    getUsernameById
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
@@ -21,7 +22,7 @@ router.get("/ping", (req, res) => {
 });
 
 router.post("/signup", asyncErrorHandler(signup));
-router.post("/login", asyncErrorHandler(login));
+router.get("/login", asyncErrorHandler(login));
 router.get("/verify-token", verifyToken);
 router.patch("/update", asyncErrorHandler(update));
 router.delete("/delete", asyncErrorHandler(deleteProfile));
@@ -32,6 +33,9 @@ router.get(
     "/is-username-available/:username",
     asyncErrorHandler(isUsernameAvailable)
 );
+
+router.get("/get-username-by-id/:id", asyncErrorHandler(getUsernameById));
+
 router.get(
     "/autocomplete-username/:username",
     asyncErrorHandler(autocompleteUsername)
