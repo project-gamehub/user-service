@@ -3,6 +3,7 @@ import { SALTROUNDS, JWT_SECRET_KEY } from "../config/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { customError } from "../errors/errorUtils/index.js";
+import { generateRandomUsername } from "../utils/index.js";
 
 class UserService {
     constructor() {
@@ -146,20 +147,26 @@ class UserService {
 
     async handleGoogleUser(name, picture, email) {
         // Check if user is already registered or not by email
-        // If not reg, sign up user
+        // If not reg, sign up user. Generate random username to signup
         // create a token and return the token
         let user = await this.userRepository.getOneByData({ email });
         if (!user) {
+            let username = generateRandomUsername();
+            while (!(await this.isUsernameAvailable(username))) {
+                username = generateRandomUsername();
+            }
             user = await this.signup({
                 email,
                 name,
                 avatar: picture,
-                isGoogleLogin: true
+                isGoogleLogin: true,
+                username
             });
         }
+
         const token = this.createToken({
             id: user._id,
-            username: user?.username
+            username: user.username
         });
         return token;
     }

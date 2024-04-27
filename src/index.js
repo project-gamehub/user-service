@@ -1,10 +1,10 @@
 import express from "express";
 import { PORT, SESSION_SECRET } from "../src/config/index.js";
-import { connectWithDB } from "./utils/index.js";
+import { connectWithDB, passport } from "./utils/index.js";
 import router from "./routes/index.js";
 import cors from "cors";
 import session from "express-session";
-import passport from "./utils/passport.js";
+import { handleGoogleUser } from "./controllers/index.js";
 
 const app = express();
 
