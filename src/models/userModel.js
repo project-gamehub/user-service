@@ -23,16 +23,23 @@ const userSchema = new mongoose.Schema(
             type: { type: String },
             coordinates: []
         },
-        totalFriends: {
-            type: Number,
-            default: 0
-        },
         isPublic: {
             type: Boolean,
             default: true
         },
         avatar: {
             type: String
+        },
+        name: {
+            type: String
+        },
+        isGoogleLogin: {
+            type: Boolean,
+            default: false
+        },
+        isUsernameSet: {
+            type: Boolean,
+            default: false
         }
     },
     { timestamps: true }

@@ -1,39 +1,46 @@
 import express from "express";
-import { PORT } from "../src/config/index.js";
+import { PORT, SESSION_SECRET } from "../src/config/index.js";
 import { connectWithDB } from "./utils/index.js";
 import router from "./routes/index.js";
+import cors from "cors";
+import session from "express-session";
+import passport from "./utils/passport.js";
 
 const app = express();
 
-// TODO Configure this later
-app.use(function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+const initializeServer = () => {
+    // TODO Configure this later
+    app.use(cors());
+
+    // TODO Add Limit on this
+    app.use(express.urlencoded({ extended: false }));
+    app.use(express.json());
+
+    app.use(
+        session({
+            secret: SESSION_SECRET,
+            resave: false,
+            saveUninitialized: false
+        })
     );
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-});
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-// TODO Add Limit on this
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-app.use("/", router);
-
-const server = app.listen(PORT, async () => {
-    console.log("Listening on port: ", PORT);
     connectWithDB().catch(() => {
         console.log("Error connecting MongoDB");
     });
+
+    app.use("/", router);
+};
+
+const server = app.listen(PORT, async () => {
+    initializeServer();
+    console.log("Listening on port: ", PORT);
 });
 
 process.on("unhandledRejection", (err) => {
     console.log(`Unhandled rejection ${err.name} occurred`);
+    console.log(err);
     server.close(() => {
         process.exit(1);
     });

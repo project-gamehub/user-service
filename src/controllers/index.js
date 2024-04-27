@@ -9,6 +9,7 @@ import getIdByUsername from "./getIdByUsername.js";
 import isUsernameAvailable from "./isUsernameAvailable.js";
 import autocompleteUsername from "./autocompleteUsername.js";
 import getUsernameById from "./getUsernameById.js";
+import handleGoogleUser from "./handleGoogleUser.js";
 
 export {
     signup,
@@ -21,5 +22,6 @@ export {
     getIdByUsername,
     isUsernameAvailable,
     autocompleteUsername,
-    getUsernameById
+    getUsernameById,
+    handleGoogleUser
 };

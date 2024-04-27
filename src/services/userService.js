@@ -118,6 +118,7 @@ class UserService {
         return users;
     }
 
+    // UserId and username as data in the token
     createToken(data) {
         const token = jwt.sign({ data }, JWT_SECRET_KEY, {
             expiresIn: "7d"
@@ -141,6 +142,26 @@ class UserService {
         if (user) {
             throw new customError(400, "Email Already Exists");
         }
+    }
+
+    async handleGoogleUser(name, picture, email) {
+        // Check if user is already registered or not by email
+        // If not reg, sign up user
+        // create a token and return the token
+        let user = await this.userRepository.getOneByData({ email });
+        if (!user) {
+            user = await this.signup({
+                email,
+                name,
+                avatar: picture,
+                isGoogleLogin: true
+            });
+        }
+        const token = this.createToken({
+            id: user._id,
+            username: user?.username
+        });
+        return token;
     }
 }
 
