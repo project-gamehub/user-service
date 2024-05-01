@@ -14,7 +14,7 @@ import {
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
-import googleLoginRouter from "./googleLoginRoutes.js";
+import googleWebLoginRouter from "./googleWebLoginRouter.js";
 
 const router = express.Router();
 
@@ -42,7 +42,7 @@ router.get(
     asyncErrorHandler(autocompleteUsername)
 );
 
-router.use("/google-login", googleLoginRouter);
+router.use("/google-web-login", googleWebLoginRouter);
 
 router.all("*", noRouteController);
 

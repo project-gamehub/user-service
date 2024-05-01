@@ -1,6 +1,5 @@
 import passport from "passport";
 import { CLIENT_SECRET, CLIENT_ID } from "../config/index.js";
-
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { handleGoogleUser } from "../controllers/index.js";
 
@@ -9,11 +8,11 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
-            callbackURL: "/google-login/callback",
+            callbackURL: "/google-web-login/callback",
             scope: ["profile", "email"],
             session: false
         },
-        async function (accessToken, refreshToken, profile, done) {
+        async (accessToken, refreshToken, profile, done) => {
             try {
                 const token = await handleGoogleUser(profile._json);
                 return done(null, token);
@@ -23,13 +22,5 @@ passport.use(
         }
     )
 );
-
-passport.serializeUser((user, done) => {
-    done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-    done(null, user);
-});
 
 export default passport;
