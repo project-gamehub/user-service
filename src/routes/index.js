@@ -23,7 +23,7 @@ router.get("/ping", (req, res) => {
 });
 
 router.post("/signup", asyncErrorHandler(signup));
-router.get("/login", asyncErrorHandler(login));
+router.post("/login", asyncErrorHandler(login));
 router.get("/verify-token", verifyToken);
 router.patch("/update", asyncErrorHandler(update));
 router.delete("/delete", asyncErrorHandler(deleteProfile));

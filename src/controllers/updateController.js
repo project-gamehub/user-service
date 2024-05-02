@@ -1,5 +1,9 @@
 import UserService from "../services/userService.js";
-import { validateUsername, validateEmail } from "../utils/index.js";
+import {
+    validateUsername,
+    validateEmail,
+    validatePassword
+} from "../utils/index.js";
 import { customError } from "../errors/errorUtils/index.js";
 
 const update = async (req, res) => {
@@ -24,6 +28,9 @@ const update = async (req, res) => {
         validateUsername(username);
     }
     const password = req.body?.password;
+    if (password) {
+        validatePassword(password);
+    }
     const discord_id = req.body?.discord_id;
     const name = req.body?.name;
     const location = req.body?.location;

@@ -1,5 +1,6 @@
 import UserService from "../services/userService.js";
 import { customError } from "../errors/errorUtils/index.js";
+import validatePassword from "../utils/validatePassword.js";
 
 const login = async (req, res) => {
     const email = req.body.email?.toLowerCase();
@@ -8,9 +9,7 @@ const login = async (req, res) => {
     if (!(email || username)) {
         throw new customError(400, "Email or Username is required");
     }
-    if (!password) {
-        throw new customError(400, "Password is required");
-    }
+    validatePassword(password);
 
     const userService = new UserService();
     const response = await userService.login(username, email, password);

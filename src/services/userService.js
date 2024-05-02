@@ -12,12 +12,8 @@ class UserService {
 
     async signup(data) {
         // Hashing the password
-        if (data.password) {
-            data.password = bcrypt.hashSync(
-                data.password,
-                parseInt(SALTROUNDS)
-            );
-        }
+
+        data.password = bcrypt.hashSync(data.password, parseInt(SALTROUNDS));
         const user = await this.userRepository.create(data);
         return user;
     }
@@ -29,11 +25,14 @@ class UserService {
             var user = await this.userRepository.getOneByData({ email });
         }
         if (!user) {
-            throw new customError(400, "Please check you email or username");
+            throw new customError(400, "No user found");
+        }
+        if (!user.password) {
+            throw new customError(400, "Passwords don't match");
         }
         const checkPass = this.checkPassword(plainPass, user.password);
         if (!checkPass) {
-            throw new customError(400, "Please check you password");
+            throw new customError(400, "Wrong Password");
         }
         const token = this.createToken({
             id: user.id,
