@@ -1,5 +1,4 @@
 import UserService from "../services/userService.js";
-import { customError } from "../errors/errorUtils/index.js";
 
 const getUserDetails = async (req, res) => {
     const username = req.query?.username?.toLowerCase();
