@@ -14,7 +14,7 @@ googleWebLoginRouter.get("/callback", (req, res, next) => {
         if (err) {
             return res.redirect("/google-web-login/failed");
         }
-        res.cookie("access-token", token, { httpOnly: true, secure: true });
+        res.cookie("access-token", token, { secure: true });
         res.redirect("/google-web-login/success");
     })(req, res, next);
 });
