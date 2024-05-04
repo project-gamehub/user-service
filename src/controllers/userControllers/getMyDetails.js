@@ -1,5 +1,5 @@
-import UserService from "../services/userService.js";
-import { customError } from "../errors/errorUtils/index.js";
+import UserService from "../../services/userService.js";
+import { customError } from "../../errors/errorUtils/index.js";
 
 const getMyDetails = async (req, res) => {
     const accessToken = req.headers["access-token"];

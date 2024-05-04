@@ -16,6 +16,7 @@ import {
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
 import googleWebLoginRouter from "./googleWebLoginRouter.js";
+import resetPasswordRouter from "./resetPasswordRouter.js";
 
 const router = express.Router();
 
@@ -45,6 +46,7 @@ router.get(
 );
 
 router.use("/google-web-login", googleWebLoginRouter);
+router.use("/reset-password", resetPasswordRouter);
 
 router.all("*", noRouteController);
 

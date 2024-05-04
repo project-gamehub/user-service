@@ -1,4 +1,4 @@
-import UserService from "../services/userService.js";
+import UserService from "../../services/userService.js";
 
 const getIdByUsername = async (req, res) => {
     const username = req.params.username.toLowerCase();

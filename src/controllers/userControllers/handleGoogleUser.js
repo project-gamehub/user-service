@@ -1,4 +1,4 @@
-import UserService from "../services/userService.js";
+import UserService from "../../services/userService.js";
 
 const handleGoogleUser = async (profile) => {
     const { name, picture, email } = profile;

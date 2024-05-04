@@ -1,6 +1,6 @@
-import UserService from "../services/userService.js";
-import { customError } from "../errors/errorUtils/index.js";
-import validatePassword from "../utils/validatePassword.js";
+import UserService from "../../services/userService.js";
+import { customError } from "../../errors/errorUtils/index.js";
+import validatePassword from "../../utils/validatePassword.js";
 
 const login = async (req, res) => {
     const email = req.body.email?.toLowerCase();

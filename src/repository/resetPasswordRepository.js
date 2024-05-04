@@ -1,6 +1,6 @@
 import resetPassword from "../models/resetPasswordModel.js";
 
-class resetPasswordRepository {
+class ResetPasswordRepository {
     async create(data) {
         const otpData = await resetPassword.create(data);
         return otpData;
@@ -21,4 +21,4 @@ class resetPasswordRepository {
     }
 }
 
-export default resetPasswordRepository;
+export default ResetPasswordRepository;

@@ -1,10 +1,10 @@
-import UserService from "../services/userService.js";
+import UserService from "../../services/userService.js";
 import {
     validateUsername,
     validateEmail,
     validatePassword
-} from "../utils/index.js";
-import { customError } from "../errors/errorUtils/index.js";
+} from "../../utils/index.js";
+import { customError } from "../../errors/errorUtils/index.js";
 
 const update = async (req, res) => {
     const accessToken = req.headers["access-token"];

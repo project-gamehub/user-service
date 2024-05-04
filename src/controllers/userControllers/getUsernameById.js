@@ -1,4 +1,4 @@
-import UserService from "../services/userService.js";
+import UserService from "../../services/userService.js";
 
 const getUsernameById = async (req, res) => {
     const _id = req.params.id;
