@@ -12,8 +12,7 @@ const resetPasswordSchema = new mongoose.Schema(
         },
         requestedAt: {
             type: Date,
-            default: Date.now,
-            expires: 3600
+            default: Date.now
         },
         requestAttempts: {
             type: Number,
@@ -31,12 +30,7 @@ const resetPasswordSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-resetPasswordSchema.pre("findOneAndUpdate", (next) => {
-    if (this.isModified("lastRequestedTime")) {
-        this.expires = 3600;
-    }
-    next();
-});
+resetPasswordSchema.index({ requestedAt: 1 }, { expireAfterSeconds: 3600 });
 
 const resetPassword = mongoose.model("resetPassword", resetPasswordSchema);
 

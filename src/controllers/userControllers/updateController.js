@@ -21,7 +21,9 @@ const update = async (req, res) => {
     if (email) {
         validateEmail(email);
         // Checking if email already exists or not
-        await userService.checkIfEmailExist(email);
+        if (await userService.checkIfEmailExist(email)) {
+            throw new customError(400, "Email Already Exists");
+        }
     }
     const username = req.body.username?.toLowerCase();
     if (username) {

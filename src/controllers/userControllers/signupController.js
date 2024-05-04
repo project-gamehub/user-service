@@ -18,7 +18,9 @@ const signup = async (req, res) => {
     const userService = new UserService();
 
     // Checking if email already exists or not
-    await userService.checkIfEmailExist(email);
+    if (await userService.checkIfEmailExist(email)) {
+        throw new customError(400, "Email Already Exists");
+    }
     // Check if username is available or not
     if (!(await userService.isUsernameAvailable(username))) {
         throw new customError(400, "Username is already in use");

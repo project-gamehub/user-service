@@ -4,6 +4,8 @@ import validateEmail from "./validateEmail.js";
 import passport from "./passport.js";
 import generateRandomUsername from "./generateRandomUsername.js";
 import validatePassword from "./validatePassword.js";
+import randomOtpGenerator from "./randomOtpGenerator.js";
+import hashUsingBcrypt from "./hashUsingBcrypt.js";
 
 export {
     connectWithDB,
@@ -11,5 +13,7 @@ export {
     validateEmail,
     passport,
     generateRandomUsername,
-    validatePassword
+    validatePassword,
+    randomOtpGenerator,
+    hashUsingBcrypt
 };

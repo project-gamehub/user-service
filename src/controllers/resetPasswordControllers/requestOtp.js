@@ -1,16 +1,16 @@
 import ResetPasswordService from "../../services/resetPasswordService.js";
+import { validateEmail, validatePassword } from "../../utils/index.js";
 
 const requestOtp = async (req, res) => {
     const { email, password } = req.body;
-    console.log("email is: ", email);
-    console.log("pass is: ", password);
+    validateEmail(email);
+    validatePassword(password);
     const resetPasswordService = new ResetPasswordService();
-    // const isAvailable = await userService.autocompleteUsername(username);
+    const message = await resetPasswordService.requestOtp(email);
 
     return res.status(200).json({
-        // message: isAvailable ? "Username available" : "Username unavailable",
-        // data: isAvailable,
-        success: true
+        success: true,
+        message
     });
 };
 

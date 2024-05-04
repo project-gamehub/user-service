@@ -1,9 +1,8 @@
 import UserRepository from "../repository/userRepository.js";
-import { SALTROUNDS, JWT_SECRET_KEY } from "../config/index.js";
-import bcrypt from "bcrypt";
+import { JWT_SECRET_KEY } from "../config/index.js";
 import jwt from "jsonwebtoken";
 import { customError } from "../errors/errorUtils/index.js";
-import { generateRandomUsername } from "../utils/index.js";
+import { generateRandomUsername, hashUsingBcrypt } from "../utils/index.js";
 
 class UserService {
     constructor() {
@@ -12,8 +11,7 @@ class UserService {
 
     async signup(data) {
         // Hashing the password
-
-        data.password = bcrypt.hashSync(data.password, parseInt(SALTROUNDS));
+        data.password = hashUsingBcrypt(data.password);
         const user = await this.userRepository.create(data);
         return user;
     }
@@ -44,10 +42,7 @@ class UserService {
     async updateProfile(id, data) {
         // Hashing the password
         if (data.password) {
-            data.password = bcrypt.hashSync(
-                data.password,
-                parseInt(SALTROUNDS)
-            );
+            data.password = hashUsingBcrypt(data.password);
         }
         const user = await this.userRepository.update(id, data);
         if (!user) {
@@ -140,8 +135,9 @@ class UserService {
             email
         });
         if (user) {
-            throw new customError(400, "Email Already Exists");
+            return true;
         }
+        return false;
     }
 
     async handleGoogleUser(name, picture, email) {
