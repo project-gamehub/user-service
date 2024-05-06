@@ -2,7 +2,11 @@ import UserRepository from "../repository/userRepository.js";
 import { JWT_SECRET_KEY } from "../config/index.js";
 import jwt from "jsonwebtoken";
 import { customError } from "../errors/errorUtils/index.js";
-import { generateRandomUsername, hashUsingBcrypt } from "../utils/index.js";
+import {
+    compareBcryptHash,
+    generateRandomUsername,
+    hashUsingBcrypt
+} from "../utils/index.js";
 
 class UserService {
     constructor() {
@@ -127,7 +131,7 @@ class UserService {
     }
 
     checkPassword(userInputPass, encryptedPass) {
-        return bcrypt.compareSync(userInputPass, encryptedPass);
+        return compareBcryptHash(userInputPass, encryptedPass);
     }
 
     async checkIfEmailExist(email) {

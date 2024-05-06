@@ -1,6 +1,10 @@
 import { customError } from "../errors/errorUtils/index.js";
 import ResetPasswordRepository from "../repository/resetPasswordRepository.js";
-import { hashUsingBcrypt, randomOtpGenerator } from "../utils/index.js";
+import {
+    compareBcryptHash,
+    hashUsingBcrypt,
+    randomOtpGenerator
+} from "../utils/index.js";
 import { resetPasswordMailSender } from "../utils/nodeMailer/index.js";
 import UserService from "./userService.js";
 
@@ -50,6 +54,7 @@ class ResetPasswordService {
         // Check if user is already present in the reset pass DB or not
         const userWithEmailExist =
             await this.resetPasswordRepository.getOtpData({ email }, "");
+        console.log(userWithEmailExist);
 
         // If not => Throw error
         if (!userWithEmailExist) {
@@ -97,13 +102,43 @@ class ResetPasswordService {
 
     async submitOtp(email, password, otp) {
         // Check if user is already present in the reset pass DB or not
+        const userWithEmailExist =
+            await this.resetPasswordRepository.getOtpData({ email }, "");
+
         // If not => Throw error
-        // Check if last attempt time is atleat more than 60 seconds or not And
-        // Request attempts is less than equal to 3 or not
-        // If not throw error
-        // Else verify the otp and verifyAttempts++
-        // If wrong OTP and throw error
-        // else Update the users password and delete the doc from the db
+        if (!userWithEmailExist) {
+            throw new customError(400, "OTP not requested");
+        }
+
+        // Check if submit attempts is less than equal to 3 or not
+        if (userWithEmailExist.verifyAttempts > 3) {
+            throw new customError(
+                400,
+                "Maximum amount of tries reached. Please try after 1hr"
+            );
+        }
+
+        // verifyAttempts++
+        await this.resetPasswordRepository.update(
+            { email },
+            { verifyAttempts: userWithEmailExist.verifyAttempts + 1 }
+        );
+
+        // verify the otp
+        const isCorrectOtp = compareBcryptHash(otp, userWithEmailExist.otp);
+
+        // If wrong OTP, throw error
+        if (!isCorrectOtp) {
+            throw new customError(400, "Wrong OTP, please try again");
+        }
+
+        // else Update the users password
+        // this.userService.updateProfile
+
+        // delete the doc from the db
+        await this.resetPasswordRepository.delete({ email });
+
+        return "Password updated successfully";
     }
 }
 

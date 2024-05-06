@@ -19,6 +19,10 @@ class ResetPasswordRepository {
         const otpData = await resetPassword.findOne(specifierData, getFields);
         return otpData;
     }
+
+    async delete(specifierData) {
+        await resetPassword.deleteOne(specifierData);
+    }
 }
 
 export default ResetPasswordRepository;

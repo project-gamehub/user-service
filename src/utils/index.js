@@ -6,6 +6,7 @@ import generateRandomUsername from "./generateRandomUsername.js";
 import validatePassword from "./validatePassword.js";
 import randomOtpGenerator from "./randomOtpGenerator.js";
 import hashUsingBcrypt from "./hashUsingBcrypt.js";
+import compareBcryptHash from "./compareBcryptHash.js";
 
 export {
     connectWithDB,
@@ -15,5 +16,6 @@ export {
     generateRandomUsername,
     validatePassword,
     randomOtpGenerator,
-    hashUsingBcrypt
+    hashUsingBcrypt,
+    compareBcryptHash
 };
