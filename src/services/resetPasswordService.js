@@ -1,6 +1,7 @@
 import { customError } from "../errors/errorUtils/index.js";
 import ResetPasswordRepository from "../repository/resetPasswordRepository.js";
 import { hashUsingBcrypt, randomOtpGenerator } from "../utils/index.js";
+import { resetPasswordMailSender } from "../utils/nodeMailer/index.js";
 import UserService from "./userService.js";
 
 class ResetPasswordService {
@@ -40,18 +41,58 @@ class ResetPasswordService {
         });
 
         // send the mail with original OTP
-        // TODO Setup nodemailer and submit the otp on the email
+        // resetPasswordMailSender(email, otp);
 
         return "OTP requested successfully";
     }
 
     async resendOtp(email) {
         // Check if user is already present in the reset pass DB or not
+        const userWithEmailExist =
+            await this.resetPasswordRepository.getOtpData({ email }, "");
+
         // If not => Throw error
+        if (!userWithEmailExist) {
+            throw new customError(400, "OTP not requested");
+        }
+
         // Check if last attempt time is atleat more than 60 seconds or not And
+        if (Date.now() - userWithEmailExist?.lastRequestedTime < 60000) {
+            throw new customError(
+                400,
+                "Please wait atleast 60 seconds before requesting new OTP"
+            );
+        }
+
         // Request attempts is less than equal to 3 or not
         // If not throw error
-        // Else generate new otp, requestAttempts++, lastRequestedTime = currTime, requestedAt and send the mail with decrypted OTP
+        if (userWithEmailExist.requestAttempts > 3) {
+            throw new customError(
+                400,
+                "Maximum amount of requests reached. Please try after 1hr"
+            );
+        }
+
+        // Else generate new otp
+        const otp = randomOtpGenerator();
+
+        // encrypt the otp
+        const encryptedOTP = hashUsingBcrypt(otp);
+
+        // requestAttempts++, lastRequestedTime = currTime, update encryptedOTP
+        await this.resetPasswordRepository.update(
+            { email },
+            {
+                requestAttempts: userWithEmailExist.requestAttempts + 1,
+                lastRequestedTime: Date.now(),
+                otp: encryptedOTP
+            }
+        );
+
+        // send the mail with decrypted OTP
+        // resetPasswordMailSender(email, otp);
+
+        return "OTP resent successfully";
     }
 
     async submitOtp(email, password, otp) {

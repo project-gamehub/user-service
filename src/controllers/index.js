@@ -12,6 +12,7 @@ import getUsernameById from "./userControllers/getUsernameById.js";
 import handleGoogleUser from "./userControllers/handleGoogleUser.js";
 import getMyDetails from "./userControllers/getMyDetails.js";
 import requestOtp from "./resetPasswordControllers/requestOtp.js";
+import resendOtp from "./resetPasswordControllers/resendOtp.js";
 
 export {
     signup,
@@ -27,5 +28,6 @@ export {
     getUsernameById,
     handleGoogleUser,
     getMyDetails,
-    requestOtp
+    requestOtp,
+    resendOtp
 };
