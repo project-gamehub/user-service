@@ -43,12 +43,12 @@ class UserService {
         return token;
     }
 
-    async updateProfile(id, data) {
+    async updateProfile(specifierData, data) {
         // Hashing the password
         if (data.password) {
             data.password = hashUsingBcrypt(data.password);
         }
-        const user = await this.userRepository.update(id, data);
+        const user = await this.userRepository.update(specifierData, data);
         if (!user) {
             throw new customError(400, "No user found!");
         }

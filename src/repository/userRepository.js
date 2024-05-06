@@ -6,8 +6,8 @@ class UserRepository {
         return user;
     }
 
-    async update(id, dataToUpdate) {
-        const user = await User.findOneAndUpdate({ id }, dataToUpdate, {
+    async update(specifierData, dataToUpdate) {
+        const user = await User.findOneAndUpdate(specifierData, dataToUpdate, {
             new: true
         });
         return user;

@@ -55,7 +55,10 @@ const update = async (req, res) => {
         }
     });
 
-    const token = await userService.updateProfile(tokenData.id, dataToUpdate);
+    const token = await userService.updateProfile(
+        { id: tokenData.id },
+        dataToUpdate
+    );
     return res.status(200).json({
         message: "Updated Successfully",
         data: { "access-token": token },

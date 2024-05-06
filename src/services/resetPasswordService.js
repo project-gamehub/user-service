@@ -45,7 +45,7 @@ class ResetPasswordService {
         });
 
         // send the mail with original OTP
-        // resetPasswordMailSender(email, otp);
+        resetPasswordMailSender(email, otp);
 
         return "OTP requested successfully";
     }
@@ -54,7 +54,6 @@ class ResetPasswordService {
         // Check if user is already present in the reset pass DB or not
         const userWithEmailExist =
             await this.resetPasswordRepository.getOtpData({ email }, "");
-        console.log(userWithEmailExist);
 
         // If not => Throw error
         if (!userWithEmailExist) {
@@ -95,7 +94,7 @@ class ResetPasswordService {
         );
 
         // send the mail with decrypted OTP
-        // resetPasswordMailSender(email, otp);
+        resetPasswordMailSender(email, otp);
 
         return "OTP resent successfully";
     }
@@ -126,14 +125,13 @@ class ResetPasswordService {
 
         // verify the otp
         const isCorrectOtp = compareBcryptHash(otp, userWithEmailExist.otp);
-
         // If wrong OTP, throw error
         if (!isCorrectOtp) {
             throw new customError(400, "Wrong OTP, please try again");
         }
 
         // else Update the users password
-        // this.userService.updateProfile
+        await this.userService.updateProfile({ email }, { password });
 
         // delete the doc from the db
         await this.resetPasswordRepository.delete({ email });

@@ -4,7 +4,6 @@ import transporter from "./transporter.js";
 async function sendEmail(emailOptions) {
     try {
         await transporter.sendMail(emailOptions);
-        console.log("Email sent successfully!");
     } catch (error) {
         console.error("Error sending email:", error);
     }
