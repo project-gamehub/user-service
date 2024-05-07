@@ -27,7 +27,7 @@ const initializeServer = () => {
     app.use(passport.session());
 
     connectWithDB().catch(() => {
-        console.log("Error connecting MongoDB");
+        console.error("Error connecting MongoDB");
     });
 
     app.use("/", router);
@@ -39,8 +39,8 @@ const server = app.listen(PORT, async () => {
 });
 
 process.on("unhandledRejection", (err) => {
-    console.log(`Unhandled rejection ${err.name} occurred`);
-    console.log(err);
+    console.error(`Unhandled rejection ${err.name} occurred`);
+    console.error(err);
     server.close(() => {
         process.exit(1);
     });
