@@ -1,16 +1,10 @@
+import axios from "axios";
 import { customError } from "../errors/errorUtils/index.js";
-import ResetPasswordRepository from "../repository/resetPasswordRepository.js";
-import {
-    compareBcryptHash,
-    hashUsingBcrypt,
-    randomOtpGenerator
-} from "../utils/index.js";
-import { resetPasswordMailSender } from "../utils/nodeMailer/index.js";
 import UserService from "./userService.js";
+import { OTP_SERVICE_URL } from "../config/index.js";
 
 class ResetPasswordService {
     constructor() {
-        this.resetPasswordRepository = new ResetPasswordRepository();
         this.userService = new UserService();
     }
 
@@ -25,35 +19,35 @@ class ResetPasswordService {
         }
 
         // Else Check if user is already present in the reset pass DB or not
-        const emailExistInOtpDb = await this.resetPasswordRepository.getOtpData(
-            { email }
-        );
-        if (emailExistInOtpDb) {
-            return "OTP already requested";
+        try {
+            const response = await axios.get(
+                OTP_SERVICE_URL + "/get-otp-data/" + email
+            );
+            const emailExistInOtpDb = response?.data?.data;
+            if (emailExistInOtpDb) {
+                return "OTP already requested";
+            }
+        } catch (error) {
+            console.log("Error occured while contacting server");
         }
 
-        // Else Generate a 4 digit OTP
-        const otp = randomOtpGenerator();
-
-        // encrypt the otp
-        const encryptedOTP = hashUsingBcrypt(otp);
-
-        // Store otp in DB
-        this.resetPasswordRepository.create({
-            email,
-            otp: encryptedOTP
+        axios.post(OTP_SERVICE_URL + "/send-otp", { email }).catch((e) => {
+            console.log("Error sending OTP");
         });
-
-        // send the mail with original OTP
-        resetPasswordMailSender(email, otp);
-
         return "OTP requested successfully";
     }
 
     async resendOtp(email) {
         // Check if user is already present in the reset pass DB or not
-        const userWithEmailExist =
-            await this.resetPasswordRepository.getOtpData({ email }, "");
+        let userWithEmailExist;
+        try {
+            const response = await axios.get(
+                OTP_SERVICE_URL + "/get-otp-data/" + email
+            );
+            userWithEmailExist = response?.data?.data;
+        } catch (error) {
+            console.log("Error occured while contacting server");
+        }
 
         // If not => Throw error
         if (!userWithEmailExist) {
@@ -61,14 +55,17 @@ class ResetPasswordService {
         }
 
         // Check if last attempt time is atleat more than 60 seconds or not And
-        if (Date.now() - userWithEmailExist?.lastRequestedTime < 60000) {
+        if (
+            Date.now() - Date.parse(userWithEmailExist.lastRequestedTime) <
+            60000
+        ) {
             throw new customError(
                 400,
                 "Please wait atleast 60 seconds before requesting new OTP"
             );
         }
 
-        // Request attempts is less than equal to 3 or not
+        // Request attempts is less than 3 or not
         // If not throw error
         if (userWithEmailExist.requestAttempts > 3) {
             throw new customError(
@@ -77,32 +74,25 @@ class ResetPasswordService {
             );
         }
 
-        // Else generate new otp
-        const otp = randomOtpGenerator();
-
-        // encrypt the otp
-        const encryptedOTP = hashUsingBcrypt(otp);
-
-        // requestAttempts++, lastRequestedTime = currTime, update encryptedOTP
-        await this.resetPasswordRepository.update(
-            { email },
-            {
-                requestAttempts: userWithEmailExist.requestAttempts + 1,
-                lastRequestedTime: Date.now(),
-                otp: encryptedOTP
-            }
-        );
-
-        // send the mail with decrypted OTP
-        resetPasswordMailSender(email, otp);
+        // Send the OTP
+        axios.post(OTP_SERVICE_URL + "/resend-otp", { email }).catch((e) => {
+            console.log("Error sending OTP");
+        });
 
         return "OTP resent successfully";
     }
 
     async submitOtp(email, password, otp) {
         // Check if user is already present in the reset pass DB or not
-        const userWithEmailExist =
-            await this.resetPasswordRepository.getOtpData({ email }, "");
+        let userWithEmailExist;
+        try {
+            const response = await axios.get(
+                OTP_SERVICE_URL + "/get-otp-data/" + email
+            );
+            userWithEmailExist = response?.data?.data;
+        } catch (error) {
+            console.log("Error occured while contacting server");
+        }
 
         // If not => Throw error
         if (!userWithEmailExist) {
@@ -117,24 +107,30 @@ class ResetPasswordService {
             );
         }
 
-        // verifyAttempts++
-        await this.resetPasswordRepository.update(
-            { email },
-            { verifyAttempts: userWithEmailExist.verifyAttempts + 1 }
-        );
-
         // verify the otp
-        const isCorrectOtp = compareBcryptHash(otp, userWithEmailExist.otp);
-        // If wrong OTP, throw error
+        let isCorrectOtp;
+        try {
+            const response = await axios.post(OTP_SERVICE_URL + "/verify-otp", {
+                email,
+                otp
+            });
+            isCorrectOtp = response?.data?.isCorrectOtp;
+        } catch (error) {
+            console.log("Error occured while verifying otp");
+        }
         if (!isCorrectOtp) {
             throw new customError(400, "Wrong OTP, please try again");
         }
 
-        // else Update the users password
+        // // else Update the users password
         await this.userService.updateProfile({ email }, { password });
 
-        // delete the doc from the db
-        await this.resetPasswordRepository.delete({ email });
+        // // delete the doc from the db
+        axios
+            .delete(OTP_SERVICE_URL + "/delete-otp-data/" + email)
+            .catch((e) => {
+                console.log("Error deleting OTP Data");
+            });
 
         return "Password updated successfully";
     }

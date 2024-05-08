@@ -4,7 +4,6 @@ import { connectWithDB, passport } from "./utils/index.js";
 import router from "./routes/index.js";
 import cors from "cors";
 import session from "express-session";
-import { handleGoogleUser } from "./controllers/index.js";
 
 const app = express();
 
