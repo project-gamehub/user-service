@@ -11,7 +11,8 @@ import {
     isUsernameAvailable,
     autocompleteUsername,
     getUsernameById,
-    getMyDetails
+    getMyDetails,
+    getAvatarURL
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
@@ -39,6 +40,7 @@ router.get(
 );
 
 router.get("/get-username-by-id/:id", asyncErrorHandler(getUsernameById));
+router.get("/get-avatar-url/:id", asyncErrorHandler(getAvatarURL));
 
 router.get(
     "/autocomplete-username/:username",

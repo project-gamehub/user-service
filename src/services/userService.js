@@ -97,6 +97,17 @@ class UserService {
         return user;
     }
 
+    async getAvatarURL(userId) {
+        const user = await this.userRepository.getOneByData(
+            { _id: userId },
+            "avatar"
+        );
+        if (!user) {
+            throw new customError(400, "No user found");
+        }
+        return user;
+    }
+
     async isUsernameAvailable(username) {
         const user = await this.userRepository.getOneByData(
             { username },
