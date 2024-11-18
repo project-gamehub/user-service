@@ -14,7 +14,7 @@ const getMyDetails = async (req, res) => {
 
     const userData = await userService.getUserDetails(
         { _id: tokenData.data.id },
-        "-createdAt -updatedAt -__v"
+        "-createdAt -updatedAt -__v -password"
     );
 
     return res.status(200).json({
