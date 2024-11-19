@@ -12,16 +12,18 @@ import {
     autocompleteUsername,
     getUsernameById,
     getMyDetails,
-    getAvatarURL
+    getAvatarURL,
+    uploadImage
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
 import googleWebLoginRouter from "./googleWebLoginRouter.js";
 import resetPasswordRouter from "./resetPasswordRouter.js";
+import multerConfig from "../utils/multerConfig.js";
 
 const router = express.Router();
 
-router.get("/ping", (req, res) => {
+router.get("/ping", (_, res) => {
     res.send({ pong: "Hello World!" });
 });
 
@@ -33,10 +35,15 @@ router.delete("/delete", asyncErrorHandler(deleteProfile));
 router.get("/user-details", asyncErrorHandler(getUserDetails));
 router.get("/get-my-details", asyncErrorHandler(getMyDetails));
 router.get("/get-id-by-username/:username", asyncErrorHandler(getIdByUsername));
-// TODO Make this routes excluded from rate limitter as this will get polled very frequently
 router.get(
     "/is-username-available/:username",
     asyncErrorHandler(isUsernameAvailable)
+);
+
+router.post(
+    "/upload-image",
+    multerConfig.single("image"),
+    asyncErrorHandler(uploadImage)
 );
 
 router.get("/get-username-by-id/:id", asyncErrorHandler(getUsernameById));

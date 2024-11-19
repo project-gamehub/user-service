@@ -1,5 +1,10 @@
 import UserRepository from "../repository/userRepository.js";
-import { JWT_SECRET_KEY } from "../config/index.js";
+import {
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET,
+    CLOUDINARY_CLOUD_NAME,
+    JWT_SECRET_KEY
+} from "../config/index.js";
 import jwt from "jsonwebtoken";
 import { customError } from "../errors/errorUtils/index.js";
 import {
@@ -7,6 +12,8 @@ import {
     generateRandomUsername,
     hashUsingBcrypt
 } from "../utils/index.js";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
 class UserService {
     constructor() {
@@ -179,6 +186,28 @@ class UserService {
             username: user.username
         });
         return token;
+    }
+
+    async uploadProfileImage(file, userId) {
+        cloudinary.config({
+            cloud_name: CLOUDINARY_CLOUD_NAME,
+            api_key: CLOUDINARY_API_KEY,
+            api_secret: CLOUDINARY_API_SECRET
+        });
+
+        const cloudinaryResponse = await cloudinary.uploader.upload(file.path, {
+            public_id: `gamehub_profile_images/${userId}`,
+            overwrite: true,
+            resource_type: "image"
+        });
+
+        await this.userRepository.update(
+            { _id: userId },
+            { avatar: cloudinaryResponse.secure_url }
+        );
+
+        fs.unlinkSync(file.path);
+        return cloudinaryResponse.secure_url;
     }
 }
 

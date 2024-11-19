@@ -6,6 +6,7 @@ import generateRandomUsername from "./generateRandomUsername.js";
 import validatePassword from "./validatePassword.js";
 import hashUsingBcrypt from "./hashUsingBcrypt.js";
 import compareBcryptHash from "./compareBcryptHash.js";
+import multerConfig from "./multerConfig.js";
 
 export {
     connectWithDB,
@@ -15,5 +16,6 @@ export {
     generateRandomUsername,
     validatePassword,
     hashUsingBcrypt,
-    compareBcryptHash
+    compareBcryptHash,
+    multerConfig
 };
