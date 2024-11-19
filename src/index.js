@@ -1,6 +1,6 @@
 import express from "express";
 import { PORT, SESSION_SECRET } from "../src/config/index.js";
-import { connectWithDB, passport } from "./utils/index.js";
+import { connectWithDB, deleteOldFiles, passport } from "./utils/index.js";
 import router from "./routes/index.js";
 import cors from "cors";
 import session from "express-session";
@@ -28,6 +28,10 @@ const initializeServer = () => {
     connectWithDB().catch(() => {
         console.error("Error connecting MongoDB");
     });
+
+    setInterval(() => {
+        deleteOldFiles("uploads", 60 * 60 * 1000);
+    }, 60 * 60 * 1000);
 
     app.use("/", router);
 };

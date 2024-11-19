@@ -7,6 +7,7 @@ import validatePassword from "./validatePassword.js";
 import hashUsingBcrypt from "./hashUsingBcrypt.js";
 import compareBcryptHash from "./compareBcryptHash.js";
 import multerConfig from "./multerConfig.js";
+import deleteOldFiles from "./deleteOldFiles.js";
 
 export {
     connectWithDB,
@@ -17,5 +18,6 @@ export {
     validatePassword,
     hashUsingBcrypt,
     compareBcryptHash,
-    multerConfig
+    multerConfig,
+    deleteOldFiles
 };
