@@ -1,9 +1,5 @@
 import UserService from "../../services/userService.js";
-import {
-    validateUsername,
-    validateEmail,
-    validatePassword
-} from "../../utils/index.js";
+import { validateUsername, validatePassword } from "../../utils/index.js";
 import { customError } from "../../errors/errorUtils/index.js";
 
 const update = async (req, res) => {
@@ -17,14 +13,6 @@ const update = async (req, res) => {
         throw new customError(400, "Invalid token");
     }
 
-    const email = req.body.email?.toLowerCase();
-    if (email) {
-        validateEmail(email);
-        // Checking if email already exists or not
-        if (await userService.checkIfEmailExist(email)) {
-            throw new customError(400, "Email Already Exists");
-        }
-    }
     const username = req.body.username?.toLowerCase();
     if (username) {
         validateUsername(username);
@@ -40,7 +28,6 @@ const update = async (req, res) => {
     const isPublic = req.body?.isPublic;
 
     const dataToUpdate = {
-        email,
         username,
         password,
         discord_id,
@@ -56,7 +43,7 @@ const update = async (req, res) => {
     });
 
     const token = await userService.updateProfile(
-        { id: tokenData.id },
+        { _id: tokenData.data.id },
         dataToUpdate
     );
     return res.status(200).json({

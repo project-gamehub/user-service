@@ -29,9 +29,12 @@ const initializeServer = () => {
         console.error("Error connecting MongoDB");
     });
 
-    setInterval(() => {
-        deleteOldFiles("uploads", 60 * 60 * 1000);
-    }, 60 * 60 * 1000);
+    setInterval(
+        () => {
+            deleteOldFiles("uploads", 60 * 60 * 1000);
+        },
+        60 * 60 * 1000
+    );
 
     app.use("/", router);
 };
