@@ -32,6 +32,18 @@ class UserRepository {
         ).limit(5);
         return users;
     }
+
+    async findNearbyUsers(lat, lng, radius) {
+        const users = await User.find({
+            location: {
+                $near: {
+                    $geometry: { type: "Point", coordinates: [lng, lat] },
+                    $maxDistance: radius
+                }
+            }
+        }).select("username location avatar");
+        return users;
+    }
 }
 
 export default UserRepository;

@@ -22,12 +22,12 @@ const userSchema = new mongoose.Schema(
         location: {
             type: {
                 type: String,
-                enum: ["Point"], // GeoJSON type
+                enum: ["Point"],
                 default: "Point"
             },
             coordinates: {
-                type: [Number], // Array of numbers [longitude, latitude]
-                required: true
+                type: [Number],
+                default: undefined
             },
             lastUpdatedTime: {
                 type: Date,

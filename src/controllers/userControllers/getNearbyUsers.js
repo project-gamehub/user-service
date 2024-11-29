@@ -1,7 +1,7 @@
 import UserService from "../../services/userService.js";
 import { customError } from "../../errors/errorUtils/index.js";
 
-const updateUserLocation = async (req, res) => {
+const getNearbyUsers = async (req, res) => {
     const accessToken = req.headers["access-token"];
     if (!accessToken) {
         throw new customError(400, "Token is required");
@@ -26,18 +26,13 @@ const updateUserLocation = async (req, res) => {
         throw new customError(400, "Invalid location format");
     }
 
-    const location = {
-        type: "Point",
-        coordinates: [lng, lat],
-        lastUpdatedTime: new Date()
-    };
-
-    await userService.updateProfile({ _id: userId }, { location });
+    const nearbyUsers = await userService.getNearbyUsers(lat, lng);
 
     return res.status(200).json({
-        message: "Location updated successfully",
-        success: true
+        message: "Nearby users fetched successfully",
+        success: true,
+        users: nearbyUsers
     });
 };
 
-export default updateUserLocation;
+export default getNearbyUsers;

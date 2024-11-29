@@ -14,7 +14,8 @@ import {
     getMyDetails,
     getAvatarURL,
     uploadImage,
-    updateUserLocation
+    updateUserLocation,
+    getNearbyUsers
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
@@ -36,6 +37,7 @@ router.patch("/update-user-location", asyncErrorHandler(updateUserLocation));
 router.delete("/delete", asyncErrorHandler(deleteProfile));
 router.get("/user-details", asyncErrorHandler(getUserDetails));
 router.get("/get-my-details", asyncErrorHandler(getMyDetails));
+router.get("/get-nearby-users", asyncErrorHandler(getNearbyUsers));
 router.get("/get-id-by-username/:username", asyncErrorHandler(getIdByUsername));
 router.get(
     "/is-username-available/:username",

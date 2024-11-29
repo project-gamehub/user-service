@@ -209,6 +209,16 @@ class UserService {
         fs.unlinkSync(file.path);
         return cloudinaryResponse.secure_url;
     }
+
+    async getNearbyUsers(lat, lng) {
+        const radiusInMeters = 10000;
+        const users = await this.userRepository.findNearbyUsers(
+            lat,
+            lng,
+            radiusInMeters
+        );
+        return users;
+    }
 }
 
 export default UserService;
