@@ -13,7 +13,8 @@ import {
     getUsernameById,
     getMyDetails,
     getAvatarURL,
-    uploadImage
+    uploadImage,
+    updateUserLocation
 } from "../controllers/index.js";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncErrorHandler } from "../errors/errorUtils/index.js";
@@ -31,6 +32,7 @@ router.post("/signup", asyncErrorHandler(signup));
 router.post("/login", asyncErrorHandler(login));
 router.get("/verify-token", verifyToken);
 router.patch("/update", asyncErrorHandler(update));
+router.patch("/update-user-location", asyncErrorHandler(updateUserLocation));
 router.delete("/delete", asyncErrorHandler(deleteProfile));
 router.get("/user-details", asyncErrorHandler(getUserDetails));
 router.get("/get-my-details", asyncErrorHandler(getMyDetails));

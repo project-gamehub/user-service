@@ -20,8 +20,19 @@ const userSchema = new mongoose.Schema(
         discord_username: String,
         name: String,
         location: {
-            type: { type: String },
-            coordinates: []
+            type: {
+                type: String,
+                enum: ["Point"], // GeoJSON type
+                default: "Point"
+            },
+            coordinates: {
+                type: [Number], // Array of numbers [longitude, latitude]
+                required: true
+            },
+            lastUpdatedTime: {
+                type: Date,
+                default: Date.now
+            }
         },
         isPublic: {
             type: Boolean,
@@ -45,6 +56,7 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+userSchema.index({ location: "2dsphere" });
 userSchema.post("save", mongooseError);
 userSchema.post("findOneAndUpdate", mongooseError);
 userSchema.post("findOne", mongooseError);

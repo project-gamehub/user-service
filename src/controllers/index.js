@@ -16,6 +16,7 @@ import resendOtp from "./resetPasswordControllers/resendOtp.js";
 import submitOtp from "./resetPasswordControllers/submitOtp.js";
 import getAvatarURL from "./userControllers/getAvatarURL.js";
 import uploadImage from "./userControllers/uploadImage.js";
+import updateUserLocation from "./userControllers/updateUserLocation.js";
 
 export {
     signup,
@@ -35,5 +36,6 @@ export {
     resendOtp,
     submitOtp,
     getAvatarURL,
-    uploadImage
+    uploadImage,
+    updateUserLocation
 };

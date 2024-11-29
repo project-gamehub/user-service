@@ -129,17 +129,17 @@ class UserService {
     async autocompleteUsername(username) {
         let users = await this.userRepository.getUsers(
             username,
-            "username -_id"
+            "username avatar"
         );
-        users = users.map((user) => user.username);
         return users;
     }
 
     // UserId and username as data in the token
+    // TODO- Change this to jwt.sign({ data }, JWT_SECRET_KEY, {
+    //     expiresIn: "7d"
+    // });
     createToken(data) {
-        const token = jwt.sign({ data }, JWT_SECRET_KEY, {
-            expiresIn: "7d"
-        });
+        const token = jwt.sign({ data }, JWT_SECRET_KEY);
         return token;
     }
 

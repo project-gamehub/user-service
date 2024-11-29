@@ -6,7 +6,7 @@ const autocompleteUsername = async (req, res) => {
     const isAvailable = await userService.autocompleteUsername(username);
 
     return res.status(200).json({
-        message: isAvailable ? "Username available" : "Username unavailable",
+        message: "Users with given usernames fetched successfully",
         data: isAvailable,
         success: true
     });
