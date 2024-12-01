@@ -8,6 +8,7 @@ import hashUsingBcrypt from "./hashUsingBcrypt.js";
 import compareBcryptHash from "./compareBcryptHash.js";
 import multerConfig from "./multerConfig.js";
 import deleteOldFiles from "./deleteOldFiles.js";
+import calculateDistance from "./calculateDistance.js";
 
 export {
     connectWithDB,
@@ -19,5 +20,6 @@ export {
     hashUsingBcrypt,
     compareBcryptHash,
     multerConfig,
-    deleteOldFiles
+    deleteOldFiles,
+    calculateDistance
 };

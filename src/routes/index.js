@@ -37,7 +37,7 @@ router.patch("/update-user-location", asyncErrorHandler(updateUserLocation));
 router.delete("/delete", asyncErrorHandler(deleteProfile));
 router.get("/user-details", asyncErrorHandler(getUserDetails));
 router.get("/get-my-details", asyncErrorHandler(getMyDetails));
-router.get("/get-nearby-users", asyncErrorHandler(getNearbyUsers));
+router.post("/get-nearby-users", asyncErrorHandler(getNearbyUsers));
 router.get("/get-id-by-username/:username", asyncErrorHandler(getIdByUsername));
 router.get(
     "/is-username-available/:username",

@@ -1,5 +1,6 @@
 import UserService from "../../services/userService.js";
 import { customError } from "../../errors/errorUtils/index.js";
+import calculateDistance from "../../utils/calculateDistance.js";
 
 const getNearbyUsers = async (req, res) => {
     const accessToken = req.headers["access-token"];
@@ -12,22 +13,47 @@ const getNearbyUsers = async (req, res) => {
         throw new customError(400, "Invalid token");
     }
 
-    let lat = req.body?.lat;
-    let lng = req.body?.lng;
+    const points = req.body?.points;
 
-    if (!lat || !lng) {
+    if (!points) {
+        throw new customError(400, "Points are required");
+    }
+
+    const ne = points?.ne;
+    const sw = points?.sw;
+
+    if (!ne || !sw) {
+        throw new customError(400, "Points are required");
+    }
+
+    let neLat = ne?.lat;
+    let neLng = ne?.lng;
+    let swLng = sw?.lng;
+    let swLat = sw?.lat;
+
+    if (!neLat || !neLng || !swLng || !swLat) {
         throw new customError(400, "Latitude and Longitude is required");
     }
 
-    lat = parseFloat(lat);
-    lng = parseFloat(lng);
+    neLat = parseFloat(neLat);
+    neLng = parseFloat(neLng);
+    swLng = parseFloat(swLng);
+    swLat = parseFloat(swLat);
 
-    if (!lat || !lng || typeof lat !== "number" || typeof lng !== "number") {
+    if (!neLat || !neLng || !swLng || !swLat || typeof neLat !== "number" || typeof neLng !== "number" || typeof swLng !== "number" || typeof swLat !== "number") {
         throw new customError(400, "Invalid location format");
     }
 
-    const nearbyUsers = await userService.getNearbyUsers(lat, lng);
+    const distInKM = calculateDistance(ne, sw);
 
+    if (distInKM > 10) {
+        throw new customError(400, "Too much area to return users");
+    }
+
+    const nearbyUsers = await userService.getNearbyUsersInRectangle(
+        { lat: neLat, lng: neLng },
+        { lat: swLat, lng: swLng }
+    );
     return res.status(200).json({
         message: "Nearby users fetched successfully",
         success: true,

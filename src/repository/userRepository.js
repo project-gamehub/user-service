@@ -33,14 +33,16 @@ class UserRepository {
         return users;
     }
 
-    async findNearbyUsers(lat, lng, radius) {
+    async findUsersInRectangle(ne, sw) {
         const users = await User.find({
             location: {
-                $near: {
-                    $geometry: { type: "Point", coordinates: [lng, lat] },
-                    $maxDistance: radius
-                }
-            }
+                $geoWithin: {
+                    $box: [
+                        [sw.lng, sw.lat], // Southwest corner
+                        [ne.lng, ne.lat], // Northeast corner
+                    ],
+                },
+            },
         }).select("username location avatar");
         return users;
     }

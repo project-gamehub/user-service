@@ -210,13 +210,8 @@ class UserService {
         return cloudinaryResponse.secure_url;
     }
 
-    async getNearbyUsers(lat, lng) {
-        const radiusInMeters = 10000;
-        const users = await this.userRepository.findNearbyUsers(
-            lat,
-            lng,
-            radiusInMeters
-        );
+    async getNearbyUsersInRectangle(ne, sw) {
+        const users = await this.userRepository.findUsersInRectangle(ne, sw);
         return users;
     }
 }
