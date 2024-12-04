@@ -21,8 +21,10 @@ class UserService {
     }
 
     async signup(data) {
-        // Hashing the password
-        data.password = hashUsingBcrypt(data.password);
+        if (data.password) {
+            // Hashing the password
+            data.password = hashUsingBcrypt(data.password);
+        }
         const user = await this.userRepository.create(data);
         return user;
     }

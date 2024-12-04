@@ -12,7 +12,7 @@ passport.use(
             scope: ["profile", "email"],
             session: false
         },
-        async (accessToken, refreshToken, profile, done) => {
+        async (_, __, profile, done) => {
             try {
                 const token = await handleGoogleUser(profile._json);
                 return done(null, token);

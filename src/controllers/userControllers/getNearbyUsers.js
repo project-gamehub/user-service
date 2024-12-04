@@ -40,7 +40,16 @@ const getNearbyUsers = async (req, res) => {
     swLng = parseFloat(swLng);
     swLat = parseFloat(swLat);
 
-    if (!neLat || !neLng || !swLng || !swLat || typeof neLat !== "number" || typeof neLng !== "number" || typeof swLng !== "number" || typeof swLat !== "number") {
+    if (
+        !neLat ||
+        !neLng ||
+        !swLng ||
+        !swLat ||
+        typeof neLat !== "number" ||
+        typeof neLng !== "number" ||
+        typeof swLng !== "number" ||
+        typeof swLat !== "number"
+    ) {
         throw new customError(400, "Invalid location format");
     }
 

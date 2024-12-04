@@ -2,6 +2,12 @@ import User from "../models/userModel.js";
 
 class UserRepository {
     async create(data) {
+        if (!data.location) {
+            data.location = {
+                type: "Point",
+                coordinates: [0, 0] // Default to longitude: 0, latitude: 0 (e.g., Null Island)
+            };
+        }
         const user = await User.create(data);
         return user;
     }
@@ -39,10 +45,10 @@ class UserRepository {
                 $geoWithin: {
                     $box: [
                         [sw.lng, sw.lat], // Southwest corner
-                        [ne.lng, ne.lat], // Northeast corner
-                    ],
-                },
-            },
+                        [ne.lng, ne.lat] // Northeast corner
+                    ]
+                }
+            }
         }).select("username location avatar");
         return users;
     }
