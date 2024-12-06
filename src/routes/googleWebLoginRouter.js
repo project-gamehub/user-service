@@ -9,22 +9,17 @@ googleWebLoginRouter.get(
     passport.authenticate("google", ["profile", "email"])
 );
 
-googleWebLoginRouter.get("/callback", (req, res, next) => {
-    passport.authenticate("google", (err, token) => {
-        if (err) {
-            return res.redirect("/google-web-login/failed");
+googleWebLoginRouter.get(
+    "/callback",
+    passport.authenticate("google", { session: false }),
+    async (req, res) => {
+        try {
+            const token = req.user;
+            res.redirect(CLIENT_URL + "/?access-token=" + token);
+        } catch (error) {
+            res.redirect(CLIENT_URL + "/?login-failed=true");
         }
-        res.cookie("access-token", token, { secure: true });
-        res.redirect("/google-web-login/success");
-    })(req, res, next);
-});
-
-googleWebLoginRouter.get("/success", (req, res) => {
-    res.redirect(CLIENT_URL);
-});
-
-googleWebLoginRouter.get("/failed", (req, res) => {
-    res.redirect(CLIENT_URL + "/?login-failed=true");
-});
+    }
+);
 
 export default googleWebLoginRouter;
