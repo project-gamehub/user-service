@@ -1,5 +1,5 @@
 import passport from "passport";
-import { CLIENT_SECRET, CLIENT_ID } from "../config/index.js";
+import { CLIENT_SECRET, CLIENT_ID, USER_SERVICE_URL } from "../config/index.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { handleGoogleUser } from "../controllers/index.js";
 
@@ -8,7 +8,9 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
-            callbackURL: "/google-web-login/callback",
+            callbackURL: USER_SERVICE_URL
+                ? USER_SERVICE_URL + "/google-web-login/callback"
+                : "/google-web-login/callback",
             scope: ["profile", "email"],
             session: false
         },
