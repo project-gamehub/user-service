@@ -8,9 +8,7 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
-            callbackURL: USER_SERVICE_URL
-                ? USER_SERVICE_URL + "/google-web-login/callback"
-                : "/google-web-login/callback",
+            callbackURL: USER_SERVICE_URL + "/google-web-login/callback",
             scope: ["profile", "email"],
             session: false
         },
